@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gold Scalper Pro</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🏆 Gold Scalper Pro</h1>
+
+        <!-- قوة الشراء والبيع -->
+
+        <div class="power-card">
+
+            <div class="power-header">
+
+                <span id="buyPercent">0% شراء</span>
+
+                <span>قوة الروبوت</span>
+
+                <span id="sellPercent">0% بيع</span>
+
+            </div>
+
+            <div class="progress">
+
+                <div id="buyBar" class="buy-bar"></div>
+
+                <div id="sellBar" class="sell-bar"></div>
+
+            </div>
+
+        </div>
+
+        <!-- بيانات السوق -->
+
+        <div class="card">
+
+            <h2>الأصل</h2>
+
+            <div id="symbol">XAU/USD</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>السعر الحالي</h2>
+
+            <div id="price">Loading...</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>آخر تحديث</h2>
+
+            <div id="time">Waiting...</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>إشارة التداول</h2>
+
+            <div id="signal">WAIT</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>نسبة الثقة</h2>
+
+            <div id="confidence">0%</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>سبب الإشارة</h2>
+
+            <div id="reason">Waiting...</div>
+
+        </div>
+
+        <!-- المؤشرات -->
+
+        <div class="card">
+
+            <h2>EMA</h2>
+
+            <div id="ema">-</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>RSI</h2>
+
+            <div id="rsi">-</div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>MACD</h2>
+
+            <div id="macd">-</div>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
