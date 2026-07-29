@@ -6,247 +6,248 @@
 }
 
 body{
-
-    background:#151b2d;
-
+    background:#0f172a;
     color:#ffffff;
-
     padding:20px;
-
 }
 
 .container{
-
-    max-width:900px;
-
+    max-width:1200px;
     margin:auto;
-
-}
-
-h1{
-
-    text-align:center;
-
-    margin-bottom:25px;
-
-    color:#ffffff;
-
-    font-size:34px;
-
 }
 
 /* ===========================
-   شريط قوة الشراء والبيع
+   Header
+=========================== */
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#FFD700;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#cbd5e1;
+    font-size:18px;
+}
+
+/* ===========================
+   Signal Card
+=========================== */
+
+.signal-card{
+    background:#1e293b;
+    border:2px solid #FFD700;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.35);
+}
+
+.signal-card h2{
+    text-align:center;
+    font-size:42px;
+    color:#00e676;
+    margin-bottom:25px;
+}
+
+.signal-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.box{
+    background:#111827;
+    border:1px solid #374151;
+    border-radius:12px;
+    padding:18px;
+    text-align:center;
+    transition:.3s;
+}
+
+.box:hover{
+    border-color:#FFD700;
+    transform:translateY(-4px);
+}
+
+.box span{
+    display:block;
+    color:#94a3b8;
+    margin-bottom:8px;
+    font-size:15px;
+}
+
+.box strong{
+    font-size:24px;
+    color:#ffffff;
+}
+
+/* ===========================
+   Buy / Sell Power
 =========================== */
 
 .power-card{
-
-    background:#1d2438;
-
+    background:#1e293b;
     border-radius:18px;
-
     padding:20px;
-
     margin-bottom:25px;
-
-    box-shadow:0 0 15px rgba(0,0,0,.3);
-
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
 }
 
 .power-header{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     margin-bottom:15px;
-
-    font-size:20px;
-
+    font-size:18px;
     font-weight:bold;
-
 }
 
 #buyPercent{
-
     color:#00e676;
-
 }
 
 #sellPercent{
-
     color:#ff5252;
-
 }
 
 .progress{
-
-    display:flex;
-
     width:100%;
-
-    height:26px;
-
-    background:#2d3448;
-
+    height:24px;
+    display:flex;
+    background:#374151;
     border-radius:30px;
-
     overflow:hidden;
-
 }
 
 .buy-bar{
-
     width:50%;
-
     background:#00c853;
-
-    transition:width .5s ease;
-
+    transition:width .5s;
 }
 
 .sell-bar{
-
     width:50%;
-
     background:#ff1744;
-
-    transition:width .5s ease;
-
+    transition:width .5s;
 }
 
 /* ===========================
-   البطاقات
+   Market Cards
 =========================== */
 
-.card{
-
-    background:#1d2438;
-
-    border-radius:15px;
-
-    padding:20px;
-
-    margin-bottom:18px;
-
-    box-shadow:0 0 10px rgba(0,0,0,.25);
-
+.market-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+    margin-bottom:25px;
 }
 
-.card h2{
+.card{
+    background:#1e293b;
+    border-radius:15px;
+    padding:20px;
+    border:1px solid #374151;
+    text-align:center;
+    transition:.3s;
+}
 
-    color:#b8c7ff;
+.card:hover{
+    transform:translateY(-5px);
+    border-color:#FFD700;
+}
 
+.card h3{
+    color:#FFD700;
     margin-bottom:12px;
-
-    font-size:20px;
-
+    font-size:18px;
 }
 
 .card div{
-
-    font-size:28px;
-
+    font-size:26px;
     font-weight:bold;
-
 }
 
 /* ===========================
-   إشارة التداول
+   Indicator Colors
 =========================== */
 
-#signal{
-
-    font-size:40px;
-
-    text-align:center;
-
-}
-
 #price{
-
-    color:#ffd54f;
-
+    color:#FFD54F;
 }
 
 #confidence{
-
-    color:#00e5ff;
-
+    color:#00E5FF;
 }
 
 #ema{
-
-    color:#4fc3f7;
-
+    color:#42A5F5;
 }
 
 #rsi{
-
-    color:#81c784;
-
+    color:#81C784;
 }
 
 #macd{
+    color:#FFB74D;
+}
 
-    color:#ffb74d;
+#trend{
+    color:#00E676;
+}
 
+#status{
+    color:#FFD700;
 }
 
 #reason{
-
+    color:#E5E7EB;
     font-size:18px;
-
     line-height:1.6;
-
-    color:#e0e0e0;
-
-    word-break:break-word;
-
 }
 
 /* ===========================
-   للشاشات الصغيرة
+   Responsive
 =========================== */
 
 @media(max-width:768px){
 
     body{
-
         padding:10px;
-
     }
 
-    h1{
-
-        font-size:26px;
-
+    .header h1{
+        font-size:30px;
     }
 
-    .power-header{
-
-        font-size:16px;
-
+    .subtitle{
+        font-size:15px;
     }
 
-    .card h2{
+    .signal-card h2{
+        font-size:30px;
+    }
 
-        font-size:18px;
+    .signal-grid{
+        grid-template-columns:1fr;
+    }
 
+    .market-grid{
+        grid-template-columns:1fr;
     }
 
     .card div{
-
         font-size:22px;
-
     }
 
-    #signal{
-
-        font-size:30px;
-
+    .power-header{
+        font-size:15px;
     }
 
 }

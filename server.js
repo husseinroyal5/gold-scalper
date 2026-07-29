@@ -6,21 +6,17 @@ const app = express();
 
 app.use(express.static("public"));
 
-app.get("/api/price", async (req, res) => {
+app.get("/api/signal", async (req, res) => {
 
     try {
 
         const candles = await getCandles();
 
         if (!candles || candles.length === 0) {
-
             return res.json({
-
                 success: false,
                 message: "No candle data"
-
             });
-
         }
 
         const last = candles[candles.length - 1];
@@ -33,7 +29,7 @@ app.get("/api/price", async (req, res) => {
 
             symbol: "XAU/USD",
 
-            price: last.close,
+            price: Number(last.close).toFixed(2),
 
             time: last.datetime,
 
@@ -45,31 +41,44 @@ app.get("/api/price", async (req, res) => {
 
             sellPercent: analysis.sellPercent,
 
+            entry: analysis.entry,
+
+            tp1: analysis.tp1,
+
+            tp2: analysis.tp2,
+
+            tp3: analysis.tp3,
+
+            sl: analysis.sl,
+
+            trend: analysis.trend,
+
+            grade: analysis.grade,
+
+            status: analysis.status,
+
+            duration: analysis.duration,
+
             reasons: analysis.reasons,
 
             indicators: analysis.indicators
 
         });
 
-    }
-
-    catch (err) {
+    } catch (err) {
 
         console.error(err);
 
-        res.json({
-
+        res.status(500).json({
             success: false,
-
             message: err.message
-
         });
 
     }
 
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
 

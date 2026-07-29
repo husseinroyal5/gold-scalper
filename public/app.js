@@ -1,109 +1,146 @@
-async function updatePrice() {
+async function loadSignal() {
 
     try {
 
-        const response = await fetch("/api/price");
-        const data = await response.json();
+        const res = await fetch("/api/signal");
+        const data = await res.json();
 
-        if (!data.success) {
+        // =========================
+        // Market
+        // =========================
 
-            document.getElementById("price").textContent = "No Data";
-            return;
-
-        }
-
-        // الأصل
         document.getElementById("symbol").textContent =
-            data.symbol;
+            data.symbol || "XAU/USD";
 
-        // السعر
         document.getElementById("price").textContent =
-            data.price;
+            data.price ?? "--";
 
-        // الوقت
         document.getElementById("time").textContent =
-            data.time;
+            data.time || new Date().toLocaleTimeString();
 
-        // الإشارة
-        const signal = document.getElementById("signal");
+        // =========================
+        // Signal
+        // =========================
 
-        signal.textContent = data.signal;
+        const signalElement = document.getElementById("signal");
 
-        signal.style.fontWeight = "bold";
-        signal.style.fontSize = "36px";
+        signalElement.textContent = data.signal;
+
+        signalElement.classList.remove("buy", "sell", "wait");
 
         switch (data.signal) {
 
             case "BUY":
-                signal.style.color = "#00e676";
+                signalElement.classList.add("buy");
                 break;
 
             case "SELL":
-                signal.style.color = "#ff5252";
+                signalElement.classList.add("sell");
                 break;
 
             default:
-                signal.style.color = "#ffd54f";
+                signalElement.classList.add("wait");
 
         }
 
-        // نسبة الثقة
+        // =========================
+        // Trade Levels
+        // =========================
+
+        document.getElementById("entry").textContent =
+            data.entry ?? "--";
+
+        document.getElementById("tp1").textContent =
+            data.tp1 ?? "--";
+
+        document.getElementById("tp2").textContent =
+            data.tp2 ?? "--";
+
+        document.getElementById("tp3").textContent =
+            data.tp3 ?? "--";
+
+        document.getElementById("sl").textContent =
+            data.sl ?? "--";
+
+        // =========================
+        // Statistics
+        // =========================
+
         document.getElementById("confidence").textContent =
-            data.confidence + "%";
+            (data.confidence ?? 0) + "%";
 
-        // الأسباب
-        document.getElementById("reason").textContent =
-            data.reasons.join(" | ");
+        document.getElementById("grade").textContent =
+            data.grade ?? "--";
 
-        // المؤشرات
-        document.getElementById("ema").textContent =
-            data.indicators.ema;
+        document.getElementById("trend").textContent =
+            data.trend ?? "--";
 
-        document.getElementById("rsi").textContent =
-            data.indicators.rsi;
+        document.getElementById("status").textContent =
+            data.status ?? "--";
 
-        document.getElementById("macd").textContent =
-            data.indicators.macd;
+        document.getElementById("duration").textContent =
+            data.duration ?? "--";
 
-        // ==========================
-        // شريط قوة البيع والشراء
-        // ==========================
+        // =========================
+        // Buy Sell Power
+        // =========================
+
+        const buyPercent = data.buyPercent ?? 50;
+        const sellPercent = data.sellPercent ?? 50;
 
         document.getElementById("buyPercent").textContent =
-            data.buyPercent + "% شراء";
+            buyPercent + "% BUY";
 
         document.getElementById("sellPercent").textContent =
-            data.sellPercent + "% بيع";
+            sellPercent + "% SELL";
 
         document.getElementById("buyBar").style.width =
-            data.buyPercent + "%";
+            buyPercent + "%";
 
         document.getElementById("sellBar").style.width =
-            data.sellPercent + "%";
+            sellPercent + "%";
 
-        // تدرج لوني حسب القوة
+        // =========================
+        // Indicators
+        // =========================
 
-        document.getElementById("buyBar").style.opacity =
-            Math.max(0.35, data.buyPercent / 100);
+        document.getElementById("ema20").textContent =
+            data.indicators?.ema20 ?? "-";
 
-        document.getElementById("sellBar").style.opacity =
-            Math.max(0.35, data.sellPercent / 100);
+        document.getElementById("ema50").textContent =
+            data.indicators?.ema50 ?? "-";
 
-    }
+        document.getElementById("rsi").textContent =
+            data.indicators?.rsi ?? "-";
 
-    catch (error) {
+        document.getElementById("macd").textContent =
+            data.indicators?.macd ?? "-";
 
-        console.error(error);
+        document.getElementById("atr").textContent =
+            data.indicators?.atr ?? "-";
 
-        document.getElementById("price").textContent =
-            "Connection Error";
+        // =========================
+        // Reasons
+        // =========================
+
+        const reason = Array.isArray(data.reasons)
+            ? data.reasons.join(" | ")
+            : (data.reason || "--");
+
+        document.getElementById("reason").textContent = reason;
+
+    } catch (err) {
+
+        console.error(err);
+
+        document.getElementById("signal").textContent = "ERROR";
 
     }
 
 }
 
-// أول تشغيل
-updatePrice();
+// تحميل أول مرة
+loadSignal();
 
 // تحديث كل 10 ثوانٍ
-setInterval(updatePrice, 10000);
+setInterval(loadSignal, 10000);

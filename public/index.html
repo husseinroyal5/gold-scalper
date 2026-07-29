@@ -2,127 +2,177 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Gold Scalper Pro</title>
-
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>🏆 Gold Scalper Pro</h1>
+    <!-- Header -->
+    <header class="header">
+        <h1>👑 Gold Scalper Pro</h1>
+        <p class="subtitle">Developed by Hussein_Royal</p>
+    </header>
 
-        <!-- قوة الشراء والبيع -->
+    <!-- Signal Card -->
+    <section class="signal-card">
 
-        <div class="power-card">
+        <h2 id="signal">WAIT</h2>
 
-            <div class="power-header">
+        <div class="signal-grid">
 
-                <span id="buyPercent">0% شراء</span>
-
-                <span>قوة الروبوت</span>
-
-                <span id="sellPercent">0% بيع</span>
-
+            <div class="box">
+                <span>📍 Entry</span>
+                <strong id="entry">--</strong>
             </div>
 
-            <div class="progress">
+            <div class="box">
+                <span>🎯 TP1</span>
+                <strong id="tp1">--</strong>
+            </div>
 
-                <div id="buyBar" class="buy-bar"></div>
+            <div class="box">
+                <span>🎯 TP2</span>
+                <strong id="tp2">--</strong>
+            </div>
 
-                <div id="sellBar" class="sell-bar"></div>
+            <div class="box">
+                <span>🎯 TP3</span>
+                <strong id="tp3">--</strong>
+            </div>
 
+            <div class="box">
+                <span>🛡 Stop Loss</span>
+                <strong id="sl">--</strong>
+            </div>
+
+            <div class="box">
+                <span>🔥 Confidence</span>
+                <strong id="confidence">0%</strong>
+            </div>
+
+            <div class="box">
+                <span>⭐ Grade</span>
+                <strong id="grade">--</strong>
+            </div>
+
+            <div class="box">
+                <span>📈 Trend</span>
+                <strong id="trend">--</strong>
+            </div>
+
+            <div class="box">
+                <span>📊 Status</span>
+                <strong id="status">Waiting Entry</strong>
+            </div>
+
+            <div class="box">
+                <span>⏱ Duration</span>
+                <strong id="duration">2-7 min</strong>
             </div>
 
         </div>
 
-        <!-- بيانات السوق -->
+    </section>
+
+    <!-- Buy / Sell Power -->
+
+    <section class="power-card">
+
+        <div class="power-header">
+
+            <span id="buyPercent">50% BUY</span>
+
+            <span>Robot Power</span>
+
+            <span id="sellPercent">50% SELL</span>
+
+        </div>
+
+        <div class="progress">
+
+            <div id="buyBar" class="buy-bar"></div>
+
+            <div id="sellBar" class="sell-bar"></div>
+
+        </div>
+
+    </section>
+
+    <!-- Market -->
+
+    <section class="market-grid">
 
         <div class="card">
-
-            <h2>الأصل</h2>
-
+            <h3>Symbol</h3>
             <div id="symbol">XAU/USD</div>
-
         </div>
 
         <div class="card">
-
-            <h2>السعر الحالي</h2>
-
+            <h3>Price</h3>
             <div id="price">Loading...</div>
-
         </div>
 
         <div class="card">
-
-            <h2>آخر تحديث</h2>
-
+            <h3>Last Update</h3>
             <div id="time">Waiting...</div>
+        </div>
 
+    </section>
+
+    <!-- Indicators -->
+
+    <section class="market-grid">
+
+        <div class="card">
+            <h3>EMA20</h3>
+            <div id="ema20">-</div>
         </div>
 
         <div class="card">
-
-            <h2>إشارة التداول</h2>
-
-            <div id="signal">WAIT</div>
-
+            <h3>EMA50</h3>
+            <div id="ema50">-</div>
         </div>
 
         <div class="card">
-
-            <h2>نسبة الثقة</h2>
-
-            <div id="confidence">0%</div>
-
-        </div>
-
-        <div class="card">
-
-            <h2>سبب الإشارة</h2>
-
-            <div id="reason">Waiting...</div>
-
-        </div>
-
-        <!-- المؤشرات -->
-
-        <div class="card">
-
-            <h2>EMA</h2>
-
-            <div id="ema">-</div>
-
-        </div>
-
-        <div class="card">
-
-            <h2>RSI</h2>
-
+            <h3>RSI</h3>
             <div id="rsi">-</div>
-
         </div>
 
         <div class="card">
-
-            <h2>MACD</h2>
-
+            <h3>MACD</h3>
             <div id="macd">-</div>
-
         </div>
 
-    </div>
+        <div class="card">
+            <h3>ATR</h3>
+            <div id="atr">-</div>
+        </div>
 
-    <script src="app.js"></script>
+    </section>
+
+    <!-- Analysis -->
+
+    <section class="market-grid">
+
+        <div class="card">
+            <h3>Reasons</h3>
+            <div id="reason">Waiting...</div>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 Gold Scalper Pro | Developed by Hussein_Royal</p>
+    </footer>
+
+</div>
+
+<script src="app.js"></script>
 
 </body>
-
 </html>
