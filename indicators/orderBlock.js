@@ -1,6 +1,6 @@
 export function orderBlockSignal(candles) {
 
-    if (candles.length < 15) {
+    if (candles.length < 20) {
         return {
             side: "WAIT",
             score: 0,
@@ -10,7 +10,11 @@ export function orderBlockSignal(candles) {
         };
     }
 
-    for (let i = candles.length - 6; i >= 2; i--) {
+    let lastSignal = null;
+
+    const start = Math.max(2, candles.length - 50);
+
+    for (let i = start; i < candles.length - 2; i++) {
 
         const c = candles[i];
 
@@ -24,37 +28,47 @@ export function orderBlockSignal(candles) {
 
         if (!next1 || !next2) continue;
 
-        const moveUp =
-            Number(next1.close) > high &&
-            Number(next2.close) > high;
+        const close1 = Number(next1.close);
+        const close2 = Number(next2.close);
 
-        const moveDown =
-            Number(next1.close) < low &&
-            Number(next2.close) < low;
+        const bullishBreak =
+            close1 > high ||
+            close2 > high;
+
+        const bearishBreak =
+            close1 < low ||
+            close2 < low;
 
         // Bullish Order Block
-        if (close < open && moveUp) {
-            return {
+        if (close < open && bullishBreak) {
+
+            lastSignal = {
                 side: "BUY",
                 score: 25,
                 high,
                 low,
                 reason: "Bullish Order Block"
             };
+
         }
 
         // Bearish Order Block
-        if (close > open && moveDown) {
-            return {
+        if (close > open && bearishBreak) {
+
+            lastSignal = {
                 side: "SELL",
                 score: 25,
                 high,
                 low,
                 reason: "Bearish Order Block"
             };
+
         }
 
     }
+
+    if (lastSignal)
+        return lastSignal;
 
     return {
         side: "WAIT",

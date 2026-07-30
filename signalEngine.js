@@ -117,58 +117,44 @@ let signal = "WAIT";
 
 const buyConfirmations = [
 
-    confirmations.trend === "BUY",
-
-    confirmations.structure === "BUY",
-
-    confirmations.smartMoney === "BUY",
-
-    confirmations.liquidity === "BUY",
-
-    rsi.side !== "SELL",
-
-    macd.side !== "SELL"
+    ema.side === "BUY",
+    rsi.side === "BUY",
+    macd.side === "BUY",
+    bos.side === "BUY",
+    choch.side === "BUY",
+    ob.side === "BUY",
+    fvg.side === "BUY",
+    liquidity.side === "BUY",
+    eql.side === "BUY"
 
 ].filter(Boolean).length;
 
 const sellConfirmations = [
 
-    confirmations.trend === "SELL",
-
-    confirmations.structure === "SELL",
-
-    confirmations.smartMoney === "SELL",
-
-    confirmations.liquidity === "SELL",
-
-    rsi.side !== "BUY",
-
-    macd.side !== "BUY"
+    ema.side === "SELL",
+    rsi.side === "SELL",
+    macd.side === "SELL",
+    bos.side === "SELL",
+    choch.side === "SELL",
+    ob.side === "SELL",
+    fvg.side === "SELL",
+    liquidity.side === "SELL",
+    eql.side === "SELL"
 
 ].filter(Boolean).length;
 
-// يمنع أي صفقة إذا كانت بنية السوق غير واضحة
-const structureAligned =
-    bos.side === choch.side &&
-    bos.side !== "WAIT";
-
-// يمنع أي صفقة إذا كانت عناصر Smart Money غير متوافقة
-const smartMoneyAligned =
-    ob.side === fvg.side &&
-    ob.side !== "WAIT";
+// نظام نقاط مرن بدلاً من التطابق الإجباري
 
 if (
-    buyConfirmations >= 5 &&
-    structureAligned &&
-    smartMoneyAligned
+    buyConfirmations >= 4 &&
+    buyScore > sellScore
 ) {
 
     signal = "BUY";
 
 } else if (
-    sellConfirmations >= 5 &&
-    structureAligned &&
-    smartMoneyAligned
+    sellConfirmations >= 4 &&
+    sellScore > buyScore
 ) {
 
     signal = "SELL";
@@ -192,18 +178,24 @@ if (signal === "WAIT")
 // Bonus Confidence
 
 if (
-    confirmations.structure === signal &&
-    confirmations.smartMoney === signal
-) {
-    confidence += 5;
-}
-
-if (
-    confirmations.liquidity === signal
+    bos.side === signal &&
+    choch.side === signal
 ) {
     confidence += 3;
 }
 
+if (
+    ob.side === signal &&
+    fvg.side === signal
+) {
+    confidence += 3;
+}
+
+if (
+    liquidity.side === signal
+) {
+    confidence += 2;
+}
 if (
     ema.side === signal &&
     macd.side === signal
@@ -222,15 +214,18 @@ confidence = Math.min(confidence, 99);
     let tp3 = "--";
     let sl = "--";
 
-    let trend = "Sideways";
-    let status = "No Trade";
+let trend = "Sideways";
+let status = "No Trade";
 
-    if (!structureAligned)
-    status = "Structure Conflict";
+if (signal === "BUY") {
+    trend = "Bullish";
+    status = "Waiting Entry";
+}
 
-if (!smartMoneyAligned)
-    status = "Smart Money Conflict";
-
+if (signal === "SELL") {
+    trend = "Bearish";
+    status = "Waiting Entry";
+}
     if (signal === "BUY") {
 
         trend = "Bullish";

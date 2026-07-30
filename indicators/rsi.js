@@ -11,23 +11,30 @@ export function rsiSignal(candles) {
 
     const last = rsi[rsi.length - 1];
 
-    if (last <= 30) {
-        return {
-            side: "BUY",
-            score: 25,
-            value: last,
-            reason: "RSI Oversold"
-        };
-    }
+if (last <= 40) {
+    return {
+        side: "BUY",
+        score: 20,
+        value: last,
+        reason: "RSI Bullish"
+    };
+}
 
-    if (last >= 70) {
-        return {
-            side: "SELL",
-            score: 25,
-            value: last,
-            reason: "RSI Overbought"
-        };
-    }
+if (last >= 60) {
+    return {
+        side: "SELL",
+        score: 20,
+        value: last,
+        reason: "RSI Bearish"
+    };
+}
+
+return {
+    side: "WAIT",
+    score: 0,
+    value: last,
+    reason: "RSI Neutral"
+};
 
     return {
         side: "WAIT",

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#111;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    width:350px;
+    background:#222;
+    padding:25px;
+    border-radius:10px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#f5b400;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>لوحة المدير</h2>
+
+<input id="username" placeholder="اسم المستخدم">
+
+<input
+id="password"
+type="password"
+placeholder="كلمة المرور">
+
+<button onclick="login()">
+
+دخول
+
+</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+
+async function login(){
+
+const username=document.getElementById("username").value;
+
+const password=document.getElementById("password").value;
+
+const r=await fetch("/api/admin/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+username,
+password
+})
+
+});
+
+const d=await r.json();
+
+if(d.success){
+
+location="/admin";
+
+}else{
+
+document.getElementById("msg").innerText=d.message;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
