@@ -251,3 +251,70 @@ body{
     }
 
 }
+/* ===========================
+   AI Decision
+=========================== */
+
+.ai-card{
+    background:#1e293b;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:25px;
+    border:2px solid #FFD700;
+    text-align:center;
+}
+
+.ai-title{
+    color:#FFD700;
+    font-size:20px;
+    margin-bottom:15px;
+    font-weight:bold;
+}
+
+.ai-decision{
+    font-size:34px;
+    font-weight:bold;
+    color:#00e676;
+}
+
+.telegram-btn{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:10px;
+
+width:100%;
+
+margin-top:20px;
+
+padding:16px;
+
+font-size:18px;
+
+font-weight:bold;
+
+text-decoration:none;
+
+color:#fff;
+
+border-radius:16px;
+
+background:linear-gradient(90deg,#0088cc,#00b4ff);
+
+box-shadow:0 0 20px rgba(0,180,255,.4);
+
+transition:.3s;
+
+}
+
+.telegram-btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 0 35px rgba(0,180,255,.8);
+
+}

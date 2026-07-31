@@ -8,6 +8,12 @@ import { analyse } from "./signalEngine.js";
 import db, { validateLicense } from "./database.js";
 import { requireAuth } from "./middleware/auth.js";
 
+// =======================
+// Active Trade
+// =======================
+
+let activeTrade = null;
+
 const app = express();
 
 app.use(express.json());
@@ -117,6 +123,57 @@ app.get("/api/logout", (req, res) => {
 
 });
 
+function getAIDecision(analysis, currentPrice) {
+
+    let score = 0;
+
+    // الاتجاه
+    if (analysis.trend === "Bullish") score++;
+    if (analysis.trend === "Bearish") score++;
+
+    // الثقة
+    if (analysis.confidence >= 80) score += 2;
+    else if (analysis.confidence >= 60) score++;
+
+    // RSI
+    const rsi = analysis.indicators?.rsi;
+
+    if (rsi > 70) score--;
+    if (rsi < 30) score++;
+
+    // MACD
+    if (
+        analysis.reasons?.some(r => r.includes("MACD Bullish"))
+    ) score++;
+
+    if (
+        analysis.reasons?.some(r => r.includes("MACD Bearish"))
+    ) score--;
+
+    // BOS
+    if (
+        analysis.reasons?.some(r => r.includes("BOS"))
+    ) score++;
+
+    // CHoCH
+    if (
+        analysis.reasons?.some(r => r.includes("CHoCH"))
+    ) score--;
+
+    // القرار النهائي
+    if (score >= 4)
+        return "🟢 استمر";
+
+    if (score >= 2)
+        return "🟠 احمِ أرباحك";
+
+    if (score >= 1)
+        return "🟡 انتظر";
+
+    return "🔴 اخرج";
+
+}
+
 app.get("/api/signal", requireAuth, async (req, res) => {
 
     try {
@@ -132,15 +189,111 @@ app.get("/api/signal", requireAuth, async (req, res) => {
 
         const last = candles[candles.length - 1];
 
-        const analysis = analyse(candles);
+        let analysis;
 
+// إذا توجد صفقة مفتوحة
+if (activeTrade) {
+
+    analysis = {
+        ...activeTrade
+    };
+
+    analysis.price = Number(last.close).toFixed(2);
+    const currentPrice = Number(last.close);
+const entry = Number(activeTrade.entry);
+const sl = Number(activeTrade.sl);
+
+let decision = "🟢 استمر";
+
+if (activeTrade.signal === "BUY") {
+
+    if (currentPrice <= sl) {
+
+        decision = "🔴 اخرج";
+
+        activeTrade = null;
+
+    } else if (currentPrice <= entry) {
+
+        decision = "🟡 انتظر";
+
+    }
+
+}
+
+if (activeTrade && activeTrade.signal === "SELL") {
+
+    if (currentPrice >= sl) {
+
+        decision = "🔴 اخرج";
+
+        activeTrade = null;
+
+    } else if (currentPrice >= entry) {
+
+        decision = "🟡 انتظر";
+
+    }
+
+}
+
+if (activeTrade)
+    analysis.decision = decision;
+
+} else {
+
+    analysis = analyse(candles);
+analysis.decision = getAIDecision(
+    analysis,
+    Number(last.close)
+);
+
+    if (
+        analysis.signal === "BUY" ||
+        analysis.signal === "SELL"
+    ) {
+
+        activeTrade = {
+
+            signal: analysis.signal,
+
+            decision: analysis.decision,
+
+            entry: analysis.entry,
+
+            sl: analysis.sl,
+
+            trend: analysis.trend,
+
+            confidence: analysis.confidence,
+
+            grade: analysis.grade,
+
+            status: analysis.status,
+
+            duration: analysis.duration,
+
+            reasons: analysis.reasons,
+
+            indicators: analysis.indicators
+
+        };
+
+    }
+
+}
         res.json({
+
+debugDecision: analysis.decision,
+debugSignal: analysis.signal,
 
             success: true,
 
             symbol: "XAU/USD",
 
             price: Number(last.close).toFixed(2),
+
+            currentPrice: Number(last.close).toFixed(2),
 
             time: last.datetime,
 
@@ -159,8 +312,6 @@ app.get("/api/signal", requireAuth, async (req, res) => {
             tp2: analysis.tp2,
 
             tp3: analysis.tp3,
-
-            sl: analysis.sl,
 
             trend: analysis.trend,
 
@@ -194,5 +345,15 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
 
     console.log(`🚀 Server running on http://localhost:${PORT}`);
+
+app.post("/api/close-trade", requireAuth, (req, res) => {
+
+    activeTrade = null;
+
+    res.json({
+        success: true
+    });
+
+});
 
 });

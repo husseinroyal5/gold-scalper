@@ -206,6 +206,9 @@ if (
 confidence = Math.min(confidence, 99);
     const lastPrice = Number(candles[candles.length - 1].close);
 
+// الصفقة الحالية
+let activeTrade = global.activeTrade || null;
+
     const atrValue = Number(atr.value || 0);
 
     let entry = "--";
@@ -276,7 +279,15 @@ if (fvg.high !== null) {
 
         status = "Waiting Entry";
 
-        entry = lastPrice.toFixed(2);
+        if (!activeTrade) {
+
+    entry = lastPrice.toFixed(2);
+
+} else {
+
+    entry = activeTrade.entry;
+
+}
 
         if (ob.high !== null) {
 
@@ -326,6 +337,25 @@ if (fvg.low !== null) {
         grade = "B";
     else if (confidence >= 70)
         grade = "C+";
+
+    if (
+    !activeTrade &&
+    (signal === "BUY" || signal === "SELL")
+) {
+
+    global.activeTrade = {
+
+        signal,
+
+        entry,
+
+        sl,
+
+        openedAt: Date.now()
+
+    };
+
+}
 return {
 
         signal,

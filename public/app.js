@@ -50,17 +50,6 @@ async function loadSignal() {
         document.getElementById("entry").textContent =
             data.entry ?? "--";
 
-        document.getElementById("tp1").textContent =
-            data.tp1 ?? "--";
-
-        document.getElementById("tp2").textContent =
-            data.tp2 ?? "--";
-
-        document.getElementById("tp3").textContent =
-            data.tp3 ?? "--";
-
-        document.getElementById("sl").textContent =
-            data.sl ?? "--";
 
         // =========================
         // Statistics
@@ -75,8 +64,51 @@ async function loadSignal() {
         document.getElementById("trend").textContent =
             data.trend ?? "--";
 
-        document.getElementById("status").textContent =
-            data.status ?? "--";
+        const status = document.getElementById("status");
+
+status.textContent =
+    data.decision ?? data.status ?? "--";
+
+status.classList.remove(
+    "buy",
+    "sell",
+    "wait"
+);
+
+if (data.decision?.includes("استمر")) {
+
+    status.classList.add("buy");
+
+} else if (
+    data.decision?.includes("اخرج")
+) {
+
+    status.classList.add("sell");
+
+} else {
+
+    status.classList.add("wait");
+
+}
+
+const decision = document.getElementById("decision");
+
+if (decision) {
+
+    decision.textContent =
+        data.debugDecision ?? data.decision ?? "--";
+
+    if (decision.textContent.includes("استمر")) {
+        decision.style.color = "#00e676";
+    } else if (decision.textContent.includes("انتظر")) {
+        decision.style.color = "#FFD600";
+    } else if (decision.textContent.includes("احم")) {
+        decision.style.color = "#ff9800";
+    } else if (decision.textContent.includes("اخرج")) {
+        decision.style.color = "#ff1744";
+    }
+
+}
 
         document.getElementById("duration").textContent =
             data.duration ?? "--";
