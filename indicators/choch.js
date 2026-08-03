@@ -32,7 +32,14 @@ export function chochSignal(candles) {
     const low1 = swing.lows[swing.lows.length - 2];
     const low2 = swing.lows[swing.lows.length - 1];
 
-    if (high2.price > high1.price && low2.price > low1.price) {
+    const last = candles[candles.length - 1];
+    const close = Number(last.close);
+
+    // BUY
+    if (
+        high2.price > high1.price &&
+        close > high1.price
+    ) {
         return {
             side: "BUY",
             score: 20,
@@ -40,7 +47,11 @@ export function chochSignal(candles) {
         };
     }
 
-    if (high2.price < high1.price && low2.price < low1.price) {
+    // SELL
+    if (
+        low2.price < low1.price &&
+        close < low1.price
+    ) {
         return {
             side: "SELL",
             score: 20,

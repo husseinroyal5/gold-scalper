@@ -55,50 +55,41 @@ const confirmations = {
     let buyScore = 0;
     let sellScore = 0;
 
-    if (ema.side === "BUY")
-        buyScore += ema.score;
-    if (ema.side === "SELL")
-        sellScore += ema.score;
+// EMA
+if (ema.side === "BUY") buyScore += 10;
+if (ema.side === "SELL") sellScore += 10;
 
-    if (rsi.side === "BUY")
-        buyScore += rsi.score;
-    if (rsi.side === "SELL")
-        sellScore += rsi.score;
+// RSI
+if (rsi.side === "BUY") buyScore += 5;
+if (rsi.side === "SELL") sellScore += 5;
 
-    if (macd.side === "BUY")
-        buyScore += macd.score;
-    if (macd.side === "SELL")
-        sellScore += macd.score;
+// MACD
+if (macd.side === "BUY") buyScore += 12;
+if (macd.side === "SELL") sellScore += 12;
 
-    if (bos.side === "BUY")
-        buyScore += bos.score;
-    if (bos.side === "SELL")
-        sellScore += bos.score;
+// BOS
+if (bos.side === "BUY") buyScore += 30;
+if (bos.side === "SELL") sellScore += 30;
 
-    if (choch.side === "BUY")
-        buyScore += choch.score;
-    if (choch.side === "SELL")
-        sellScore += choch.score;
+// CHoCH
+if (choch.side === "BUY") buyScore += 35;
+if (choch.side === "SELL") sellScore += 35;
 
-    if (ob.side === "BUY")
-        buyScore += ob.score;
-    if (ob.side === "SELL")
-        sellScore += ob.score;
+// Order Block
+if (ob.side === "BUY") buyScore += 30;
+if (ob.side === "SELL") sellScore += 30;
 
-    if (fvg.side === "BUY")
-        buyScore += fvg.score;
-    if (fvg.side === "SELL")
-        sellScore += fvg.score;
+// FVG
+if (fvg.side === "BUY") buyScore += 25;
+if (fvg.side === "SELL") sellScore += 25;
 
-    if (liquidity.side === "BUY")
-        buyScore += liquidity.score;
-    if (liquidity.side === "SELL")
-        sellScore += liquidity.score;
+// Liquidity
+if (liquidity.side === "BUY") buyScore += 20;
+if (liquidity.side === "SELL") sellScore += 20;
 
-    if (eql.side === "BUY")
-        buyScore += eql.score;
-    if (eql.side === "SELL")
-        sellScore += eql.score;
+// Equal High / Low
+if (eql.side === "BUY") buyScore += 10;
+if (eql.side === "SELL") sellScore += 10;
 
     const totalScore = buyScore + sellScore;
 
@@ -145,36 +136,58 @@ const sellConfirmations = [
 
 // نظام نقاط مرن بدلاً من التطابق الإجباري
 
+// =========================
+// Signal Decision
+// =========================
+
 if (
-    buyConfirmations >= 4 &&
-    buyScore > sellScore
+    buyConfirmations >= 3 &&
+    buyScore >= sellScore + 10
 ) {
 
     signal = "BUY";
 
-} else if (
-    sellConfirmations >= 4 &&
-    sellScore > buyScore
+}
+else if (
+    sellConfirmations >= 3 &&
+    sellScore >= buyScore + 10
 ) {
 
     signal = "SELL";
 
-} else {
+}
+else {
 
     signal = "WAIT";
 
 }
 
-let confidence = Math.max(buyPercent, sellPercent);
+let confidence;
 
-if (signal === "BUY")
-    confidence = Math.min(buyConfirmations * 16, 99);
+if (signal === "BUY") {
 
-if (signal === "SELL")
-    confidence = Math.min(sellConfirmations * 16, 99);
+    confidence = Math.min(
+        60 + ((buyScore - sellScore) / 2),
+        99
+    );
 
-if (signal === "WAIT")
-    confidence = Math.max(buyPercent, sellPercent);
+}
+else if (signal === "SELL") {
+
+    confidence = Math.min(
+        60 + ((sellScore - buyScore) / 2),
+        99
+    );
+
+}
+else {
+
+    confidence = Math.max(
+        40,
+        Math.min(buyScore, sellScore)
+    );
+
+}
 // Bonus Confidence
 
 if (
@@ -356,6 +369,7 @@ if (fvg.low !== null) {
     };
 
 }
+
 return {
 
         signal,

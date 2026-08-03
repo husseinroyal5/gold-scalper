@@ -1,6 +1,6 @@
 export default {
 
-    API_KEY: "91a47f7de6414a7498d468e185414584",
+    API_KEY: "9aaf0294a9844bb0b903a27f0357e397",
 
     SYMBOL: "XAU/USD",
 

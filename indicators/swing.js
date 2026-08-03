@@ -1,4 +1,4 @@
-export function swingStructure(candles, left = 3, right = 3) {
+export function swingStructure(candles, left = 2, right = 2) {
 
     const highs = [];
     const lows = [];

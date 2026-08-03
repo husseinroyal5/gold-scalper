@@ -1,6 +1,6 @@
 export function orderBlockSignal(candles) {
 
-    if (candles.length < 20) {
+    if (!Array.isArray(candles) || candles.length < 25) {
         return {
             side: "WAIT",
             score: 0,
@@ -10,9 +10,11 @@ export function orderBlockSignal(candles) {
         };
     }
 
-    let lastSignal = null;
+    const lastPrice = Number(candles[candles.length - 1].close);
 
-    const start = Math.max(2, candles.length - 50);
+    let best = null;
+
+    const start = Math.max(2, candles.length - 30);
 
     for (let i = start; i < candles.length - 2; i++) {
 
@@ -23,59 +25,85 @@ export function orderBlockSignal(candles) {
         const high = Number(c.high);
         const low = Number(c.low);
 
-        const next1 = candles[i + 1];
-        const next2 = candles[i + 2];
-
-        if (!next1 || !next2) continue;
-
-        const close1 = Number(next1.close);
-        const close2 = Number(next2.close);
-
-        const bullishBreak =
-            close1 > high ||
-            close2 > high;
-
-        const bearishBreak =
-            close1 < low ||
-            close2 < low;
+        const next1 = Number(candles[i + 1].close);
+        const next2 = Number(candles[i + 2].close);
 
         // Bullish Order Block
-        if (close < open && bullishBreak) {
+        if (close < open && (next1 > high || next2 > high)) {
 
-            lastSignal = {
-                side: "BUY",
-                score: 25,
-                high,
-                low,
-                reason: "Bullish Order Block"
-            };
+            const distance = Math.abs(lastPrice - high);
+
+            if (!best || distance < best.distance) {
+
+                best = {
+
+                    side: "BUY",
+
+                    score: 30,
+
+                    high,
+
+                    low,
+
+                    distance,
+
+                    reason: "Bullish Order Block"
+
+                };
+
+            }
 
         }
 
         // Bearish Order Block
-        if (close > open && bearishBreak) {
+        if (close > open && (next1 < low || next2 < low)) {
 
-            lastSignal = {
-                side: "SELL",
-                score: 25,
-                high,
-                low,
-                reason: "Bearish Order Block"
-            };
+            const distance = Math.abs(lastPrice - low);
+
+            if (!best || distance < best.distance) {
+
+                best = {
+
+                    side: "SELL",
+
+                    score: 30,
+
+                    high,
+
+                    low,
+
+                    distance,
+
+                    reason: "Bearish Order Block"
+
+                };
+
+            }
 
         }
 
     }
 
-    if (lastSignal)
-        return lastSignal;
+    if (best) {
+
+        delete best.distance;
+
+        return best;
+
+    }
 
     return {
+
         side: "WAIT",
+
         score: 0,
+
         high: null,
+
         low: null,
+
         reason: "No Order Block"
+
     };
 
 }
