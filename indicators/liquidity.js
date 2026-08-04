@@ -1,65 +1,110 @@
 export function liquiditySignal(candles) {
 
-    if (!Array.isArray(candles) || candles.length < 10) {
+    if (!Array.isArray(candles) || candles.length < 20) {
 
         return {
             side: "WAIT",
             score: 0,
             level: null,
+            strength: 0,
             reason: "Not enough candles"
         };
 
     }
 
-    // نبحث في آخر 3 شمعات بدلاً من شمعة واحدة
-    for (let i = candles.length - 3; i < candles.length; i++) {
+    const lastPrice =
+        Number(candles[candles.length - 1].close);
+
+    let best = null;
+
+    // آخر 10 شمعات فقط
+    for (let i = candles.length - 10; i < candles.length; i++) {
 
         if (i < 5) continue;
 
-        const last = candles[i];
+        const candle = candles[i];
 
         const prev = candles.slice(i - 5, i);
 
-        const highest = Math.max(...prev.map(c => Number(c.high)));
-        const lowest = Math.min(...prev.map(c => Number(c.low)));
+        const highest =
+            Math.max(...prev.map(c => Number(c.high)));
 
-        const lastHigh = Number(last.high);
-        const lastLow = Number(last.low);
-        const lastClose = Number(last.close);
+        const lowest =
+            Math.min(...prev.map(c => Number(c.low)));
 
-        // Buy Side Liquidity Sweep
-        if (lastHigh > highest && lastClose < highest) {
+        const high = Number(candle.high);
+        const low = Number(candle.low);
+        const close = Number(candle.close);
 
-            return {
+        // =====================
+        // Buy Side Sweep
+        // =====================
 
-                side: "SELL",
+        if (high > highest && close < highest) {
 
-                score: 30,
+            const distance =
+                Math.abs(lastPrice - highest);
 
-                level: highest,
+            if (!best || distance < best.distance) {
 
-                reason: "Buy Side Liquidity Sweep"
+                best = {
 
-            };
+                    side: "SELL",
+
+                    score: 35,
+
+                    strength: 90,
+
+                    level: highest,
+
+                    distance,
+
+                    reason: "Buy Side Liquidity Sweep"
+
+                };
+
+            }
 
         }
 
-        // Sell Side Liquidity Sweep
-        if (lastLow < lowest && lastClose > lowest) {
+        // =====================
+        // Sell Side Sweep
+        // =====================
 
-            return {
+        if (low < lowest && close > lowest) {
 
-                side: "BUY",
+            const distance =
+                Math.abs(lastPrice - lowest);
 
-                score: 30,
+            if (!best || distance < best.distance) {
 
-                level: lowest,
+                best = {
 
-                reason: "Sell Side Liquidity Sweep"
+                    side: "BUY",
 
-            };
+                    score: 35,
+
+                    strength: 90,
+
+                    level: lowest,
+
+                    distance,
+
+                    reason: "Sell Side Liquidity Sweep"
+
+                };
+
+            }
 
         }
+
+    }
+
+    if (best) {
+
+        delete best.distance;
+
+        return best;
 
     }
 
@@ -68,6 +113,8 @@ export function liquiditySignal(candles) {
         side: "WAIT",
 
         score: 0,
+
+        strength: 0,
 
         level: null,
 

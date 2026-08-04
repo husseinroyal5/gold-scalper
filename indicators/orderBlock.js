@@ -1,45 +1,90 @@
 export function orderBlockSignal(candles) {
 
     if (!Array.isArray(candles) || candles.length < 25) {
+
         return {
+
             side: "WAIT",
+
             score: 0,
+
+            strength: 0,
+
             high: null,
+
             low: null,
+
             reason: "Not enough candles"
+
         };
+
     }
 
-    const lastPrice = Number(candles[candles.length - 1].close);
+    const lastPrice =
+        Number(candles[candles.length - 1].close);
 
     let best = null;
 
-    const start = Math.max(2, candles.length - 30);
+    const start =
+        Math.max(5, candles.length - 40);
 
-    for (let i = start; i < candles.length - 2; i++) {
+    for (let i = start; i < candles.length - 3; i++) {
 
         const c = candles[i];
 
         const open = Number(c.open);
         const close = Number(c.close);
+
         const high = Number(c.high);
         const low = Number(c.low);
 
-        const next1 = Number(candles[i + 1].close);
-        const next2 = Number(candles[i + 2].close);
+        const next1 = candles[i + 1];
+        const next2 = candles[i + 2];
 
-        // Bullish Order Block
-        if (close < open && (next1 > high || next2 > high)) {
+        const body1 =
+            Math.abs(
+                Number(next1.close) -
+                Number(next1.open)
+            );
 
-            const distance = Math.abs(lastPrice - high);
+        const body2 =
+            Math.abs(
+                Number(next2.close) -
+                Number(next2.open)
+            );
 
-            if (!best || distance < best.distance) {
+        // ==========================
+        // Bullish
+        // ==========================
+
+        if (
+
+            close < open &&
+
+            Number(next1.close) > high &&
+
+            body1 > body2 * 0.6
+
+        ) {
+
+            if (lastPrice < low)
+                continue;
+
+            const distance =
+                Math.abs(lastPrice - high);
+
+            if (
+                !best ||
+                distance < best.distance
+            ) {
 
                 best = {
 
                     side: "BUY",
 
-                    score: 30,
+                    score: 35,
+
+                    strength: 90,
 
                     high,
 
@@ -55,18 +100,38 @@ export function orderBlockSignal(candles) {
 
         }
 
-        // Bearish Order Block
-        if (close > open && (next1 < low || next2 < low)) {
+        // ==========================
+        // Bearish
+        // ==========================
 
-            const distance = Math.abs(lastPrice - low);
+        if (
 
-            if (!best || distance < best.distance) {
+            close > open &&
+
+            Number(next1.close) < low &&
+
+            body1 > body2 * 0.6
+
+        ) {
+
+            if (lastPrice > high)
+                continue;
+
+            const distance =
+                Math.abs(lastPrice - low);
+
+            if (
+                !best ||
+                distance < best.distance
+            ) {
 
                 best = {
 
                     side: "SELL",
 
-                    score: 30,
+                    score: 35,
+
+                    strength: 90,
 
                     high,
 
@@ -97,6 +162,8 @@ export function orderBlockSignal(candles) {
         side: "WAIT",
 
         score: 0,
+
+        strength: 0,
 
         high: null,
 

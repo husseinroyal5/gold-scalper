@@ -3,7 +3,7 @@ import session from "express-session";
 import bcrypt from "bcrypt";
 
 import { getCandles } from "./api.js";
-import { analyse } from "./signalEngine.js";
+import { analyse } from "./signalEngine_v3.js";
 
 import db, { validateLicense } from "./database.js";
 import { requireAuth } from "./middleware/auth.js";
